@@ -1,6 +1,13 @@
 # SSD1306
 
-**TODO: Add description**
+##Usage
+
+Turn on the display:
+```elixir
+  SSD1306.Device.all_on
+```
+
+
 
 ## Installation
 
