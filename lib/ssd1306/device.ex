@@ -5,19 +5,19 @@ defmodule SSD1306.Device do
   require Logger
 
   def start_link(%{bus: _, address: _, reset_pin: _}=config) do
-    GenServer.start_link(Device, [config])
+    GenServer.start_link(__MODULE__, [config], name: __MODULE__)
   end
 
-  def display(buffer) when is_binary(buffer), do: GenServer.call(gproc_pid(:default), {:display, buffer})
-  def display(bus, address, buffer) when is_binary(buffer), do: GenServer.call(gproc_pid(bus, address), {:display, buffer})
+  def display(buffer) when is_binary(buffer), do: GenServer.call(__MODULE__, {:display, buffer})
+  def display(bus, address, buffer) when is_binary(buffer), do: GenServer.call(__MODULE__, {:display, buffer})
 
-  def all_on, do: GenServer.call(gproc_pid(:default), :all_on)
-  def all_on(bus, address), do: GenServer.call(gproc_pid(bus, address), :all_on)
-  def all_off, do: GenServer.call(gproc_pid(:default), :all_off)
-  def all_off(bus, address), do: GenServer.call(gproc_pid(bus, address), :all_off)
+  def all_on, do: GenServer.call(__MODULE__, :all_on)
+  # def all_on(bus, address), do: GenServer.call(gproc_pid(bus, address), :all_on)
+  def all_off, do: GenServer.call(__MODULE__, :all_off)
+  # def all_off(bus, address), do: GenServer.call(gproc_pid(bus, address), :all_off)
 
   def init([%{bus: bus, address: address, reset_pin: reset}=state]) do
-    gproc_reg(bus, address)
+    # gproc_reg(bus, address)
     width  = Map.get(state, :width, 128)
     height = Map.get(state, :height, 64)
 
@@ -96,14 +96,4 @@ defmodule SSD1306.Device do
   defp device_name(%{bus: bus, address: address, reset_pin: reset}), do: "#{bus}:#{i2h address}(#{reset})"
   defp i2h(i), do: "0x" <> Integer.to_string(i, 16)
 
-  defp gproc_key(bus, address), do: {:n, :l, {Device, bus, address}}
-  defp gproc_pid(:default) do
-    :ssd1306
-    |> Application.get_env(:devices, [])
-    |> Enum.take(1)
-    |> Enum.map(fn %{bus: bus, address: address} -> gproc_pid(bus, address) end)
-    |> List.first
-  end
-  defp gproc_pid(bus, address), do: :gproc.lookup_pid(gproc_key(bus, address))
-  defp gproc_reg(bus, address), do: :gproc.reg(gproc_key(bus, address))
 end
