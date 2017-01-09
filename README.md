@@ -6,7 +6,22 @@ Turn on the display:
 ```elixir
   SSD1306.Device.all_on
 ```
+Turn off the display:
+```elixir
+  SSD1306.Device.all_off
+```
 
+Set headline (big centered yellow text)
+```elixir
+  SSD1306.Device.set_headline(text)
+```
+
+Set line of text (0-5)
+```elixir
+  SSD1306.Device.set_line(text, line)
+```
+
+![example](http://i.imgur.com/6WX7VxQ.jpg "Example")
 
 
 ## Installation
