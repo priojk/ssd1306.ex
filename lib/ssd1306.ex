@@ -13,7 +13,7 @@ defmodule SSD1306 do
         state = Application.get_env(:ssd1306, :initial_state, {"HELLO", ["", "", "", "", "", ""]})
 
         children = [
-            worker(Device, [arg])
+            worker(Device, [arg]),
             worker(Display, [state])
         ]
 
