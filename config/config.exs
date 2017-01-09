@@ -3,8 +3,8 @@
 use Mix.Config
 
 config :ssd1306,
-  devices: [%{bus: "i2c-1", address: 0x3c, reset_pin: 24, commands: []},
-            %{bus: "i2c-1", address: 0x3d, reset_pin: 26, commands: []}]
+    device: %{bus: "i2c-1", address: 0x3d, reset_pin: 26, commands: []},
+    initial_state: {"binarka", ["", "", "", "", "", ""]}
 
 # It is also possible to import configuration files, relative to this
 # directory. For example, you can emulate configuration per environment

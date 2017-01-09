@@ -9,12 +9,9 @@ defmodule SSD1306.Device do
   end
 
   def display(buffer) when is_binary(buffer), do: GenServer.call(__MODULE__, {:display, buffer})
-  def display(bus, address, buffer) when is_binary(buffer), do: GenServer.call(__MODULE__, {:display, buffer})
-
   def all_on, do: GenServer.call(__MODULE__, :all_on)
-  # def all_on(bus, address), do: GenServer.call(gproc_pid(bus, address), :all_on)
   def all_off, do: GenServer.call(__MODULE__, :all_off)
-  # def all_off(bus, address), do: GenServer.call(gproc_pid(bus, address), :all_off)
+  def reset, do: GenServer.call(__MODULE__, :reset)
 
   def init([%{bus: bus, address: address, reset_pin: reset}=state]) do
     # gproc_reg(bus, address)
@@ -46,6 +43,11 @@ defmodule SSD1306.Device do
   def handle_call(:all_off, from, state) do
     buffer = all_off_buffer(state)
     handle_call({:display, buffer}, from, state)
+  end
+
+  def handle_call(:reset, _from, state) do
+    reset_device(state)
+    {:reply, :ok, state}
   end
 
   def handle_call({:display, buffer}, _from, %{width: width, height: height}=state) do
