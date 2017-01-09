@@ -6,7 +6,7 @@ defmodule SSD1306.Display do
   @height 64
   @buffer_size round(@width * @height / 8)
   @bg_color Application.get_env(:ssd1306, :inverted, 0)
-
+  @empty_state {"", ["","", "", "", "", ""]}
   #API
 
   def start_link(state) do
@@ -21,12 +21,18 @@ defmodule SSD1306.Display do
     GenServer.call(__MODULE__, {:set_line, text, line})
   end
 
+  def clear do
+    GenServer.call(__MODULE__, :clear)
+  end
+
   #Callbacks
   def init([state]) do
     #state is {headline, [array of lines to display]}
     state |> draw_screen
     {:ok, state}
   end
+
+  def handle_call(:clear, _from, _state), do: {:reply, :ok, @empty_state}
 
   def handle_call({:set_headline, text}, _from, {_, lines}) do
     new_state = {text, lines}
