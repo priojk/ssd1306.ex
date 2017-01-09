@@ -9,11 +9,12 @@ defmodule SSD1306 do
     def start(_type, _args) do
         import Supervisor.Spec, warn: false
 
-        args = Application.get_env(:SSD1306, :device, {bus: "i2c-1", address: 0x3c, reset_pin: 24, commands: []})
+        arg = Application.get_env(:ssd1306, :device, %{bus: "i2c-1", address: 0x3c, reset_pin: 24, commands: []})
+        state = Application.get_env(:ssd1306, :initial_state, {"HELLO", ["", "", "", "", "", ""]})
 
         children = [
-            worker(SSD1306.Device, args)
-            worker(SSD1306.Display, [])
+            worker(Device, [arg])
+            worker(Display, [state])
         ]
 
         opts = [strategy: :one_for_one, name: SSD1306.Supervisor]

@@ -4,7 +4,8 @@ use Mix.Config
 
 config :ssd1306,
     device: %{bus: "i2c-1", address: 0x3d, reset_pin: 26, commands: []},
-    initial_state: {"binarka", ["", "", "", "", "", ""]}
+    initial_state: {"binarka", ["", "", "", "", "", ""]},
+    inverted: 0
 
 # It is also possible to import configuration files, relative to this
 # directory. For example, you can emulate configuration per environment
