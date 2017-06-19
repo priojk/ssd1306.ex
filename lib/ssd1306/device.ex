@@ -1,4 +1,8 @@
 defmodule SSD1306.Device do
+
+  alias ElixirALE.I2C
+  alias ElixirALE.GPIO
+  
   alias SSD1306.{Device, Commands}
   use GenServer
   use Bitwise
@@ -19,8 +23,8 @@ defmodule SSD1306.Device do
     height = Map.get(state, :height, 64)
 
     Logger.info("Connecting to SSD1306 device #{device_name state} (#{width}x#{height})")
-    {:ok, i2c}  = I2c.start_link(bus, address)
-    {:ok, gpio} = Gpio.start_link(reset, :output)
+    {:ok, i2c}  = I2C.start_link(bus, address)
+    {:ok, gpio} = GPIO.start_link(reset, :output)
 
     state = state
       |> Map.put(:width, width)

@@ -1,4 +1,8 @@
 defmodule SSD1306.Commands do
+
+  alias ElixirALE.I2C
+  alias ElixirALE.GPIO
+
   use Bitwise
 
   @control_register                         0x00
@@ -39,11 +43,11 @@ defmodule SSD1306.Commands do
   Reset the SSD1306 using the GPIO reset pin.
   """
   def reset!(gpio_pid) do
-    with :ok <- Gpio.write(gpio_pid, 1),
+    with :ok <- GPIO.write(gpio_pid, 1),
          :ok <- :timer.sleep(1),
-         :ok <- Gpio.write(gpio_pid, 0),
+         :ok <- GPIO.write(gpio_pid, 0),
          :ok <- :timer.sleep(10),
-         :ok <- Gpio.write(gpio_pid, 1),
+         :ok <- GPIO.write(gpio_pid, 1),
          do: :ok
   end
 
@@ -132,8 +136,8 @@ defmodule SSD1306.Commands do
   def vertical_and_right_horizontal_scroll!(pid), do: send_command(pid, @cmd_vertical_and_right_horizontal_scroll)
   def vertical_and_left_horizontal_scroll!(pid),  do: send_command(pid, @cmd_vertical_and_left_horizontal_scroll)
 
-  defp send_data(pid, << msb::integer-size(8), lsb::integer-size(8) >>), do: I2c.write(pid, <<@data_register, msb, lsb>>)
-  defp send_command(pid, byte), do: I2c.write(pid, <<@control_register, byte>>)
+  defp send_data(pid, << msb::integer-size(8), lsb::integer-size(8) >>), do: I2C.write(pid, <<@data_register, msb, lsb>>)
+  defp send_command(pid, byte), do: I2C.write(pid, <<@control_register, byte>>)
   defp send_commands(pid, commands) do
     Enum.reduce(commands, :ok, fn
       _, {:error, _}=error -> error

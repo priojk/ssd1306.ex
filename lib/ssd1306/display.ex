@@ -117,7 +117,7 @@ defmodule SSD1306.Display do
   """
   defp get_empty(0), do: []
   defp get_empty(size) do
-    1..size |> Enum.map (fn (_) -> @bg_color end)
+    1..size |> Enum.map(fn (_) -> @bg_color end)
   end
 
   @doc """
